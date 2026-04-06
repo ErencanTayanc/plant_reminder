@@ -93,7 +93,7 @@ class StatsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 14),
+                  
 
                   // Stats grid
                   GridView.count(
@@ -123,12 +123,7 @@ class StatsScreen extends StatelessWidget {
                           emoji: '',
                           t: t,
                         ),
-                      _StatBox(
-                        value: '98%',
-                        label: 'Health score',
-                        emoji: '❤️',
-                        t: t,
-                      ),
+                      
                     ],
                   ),
                   const SizedBox(height: 24),

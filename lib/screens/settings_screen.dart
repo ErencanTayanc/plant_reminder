@@ -117,14 +117,21 @@ class SettingsScreen extends StatelessWidget {
                       t: t,
                       icon: '🌱',
                       label: 'Version',
-                      value: '1.0.0',
+                      value: '0.1.0',
+                    ),
+                    _Divider(t),
+                    _InfoTile(
+                      t: t,
+                      icon: '👨‍💻',
+                      label: 'Developer',
+                      value: 'Erencan TAYANÇ',
                     ),
                     _Divider(t),
                     _InfoTile(
                       t: t,
                       icon: '💧',
                       label: 'Total plants tracked',
-                      value: 'Stored locally',
+                      value: 'Stored Locally',
                     ),
                     _Divider(t),
                     _ActionTile(
