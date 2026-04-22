@@ -276,9 +276,9 @@ class _NameTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(Icons.person),
-      title: Text('Your Name', style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
+      title: Text('your_name'.tr, style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
       subtitle: Text(
-        s.userName.value.isEmpty ? 'Tap to set your name' : s.userName.value,
+        s.userName.value.isEmpty ? 'tap_set_name'.tr : s.userName.value,
         style: TextStyle(color: t.textMuted, fontSize: 13),
       ),
       trailing: Icon(Icons.chevron_right, color: t.textMuted, size: 20),
@@ -292,13 +292,13 @@ class _NameTile extends StatelessWidget {
       AlertDialog(
         backgroundColor: t.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Your name', style: TextStyle(color: t.textDark, fontWeight: FontWeight.bold)),
+        title: Text('your_name'.tr, style: TextStyle(color: t.textDark, fontWeight: FontWeight.bold)),
         content: TextField(
           controller: ctrl,
           autofocus: true,
           style: TextStyle(color: t.textDark),
           decoration: InputDecoration(
-            hintText: 'e.g. Alex',
+            hintText: 'name_hint'.tr,
             hintStyle: TextStyle(color: t.textMuted),
             filled: true,
             fillColor: t.accent,
@@ -317,7 +317,7 @@ class _NameTile extends StatelessWidget {
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('Cancel', style: TextStyle(color: t.textMuted))),
+          TextButton(onPressed: () => Get.back(), child: Text('cancel'.tr, style: TextStyle(color: t.textMuted))),
           ElevatedButton(
             onPressed: () {
               s.setUserName(ctrl.text);
@@ -328,7 +328,7 @@ class _NameTile extends StatelessWidget {
               elevation: 0,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
-            child: const Text('Save', style: TextStyle(color: Colors.white)),
+            child: Text('save'.tr, style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -395,7 +395,7 @@ class _NotifTimeTile extends StatelessWidget {
     return Obx(() {
       return ListTile(
         leading: Icon(Icons.notifications, color: t.textDark),
-        title: Text('Reminder Time', style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
+        title: Text('reminder_time'.tr, style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
         subtitle: Text(s.notifTimeLabel, style: TextStyle(color: t.textMuted, fontSize: 13)),
         trailing: Icon(Icons.chevron_right, color: t.textMuted, size: 20),
         onTap: () async {
@@ -427,7 +427,7 @@ class _SortTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ListTile(
     leading: Icon(Icons.swap_vert, color: t.textDark),
-    title: Text('Sort Plants By', style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
+    title: Text('sort_plants'.tr, style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
     subtitle: Text(s.sortOrderLabel, style: TextStyle(color: t.textMuted, fontSize: 13)),
     trailing: Icon(Icons.chevron_right, color: t.textMuted, size: 20),
     onTap: () => Get.bottomSheet(_SortSheet(s: s, t: t)),
@@ -456,10 +456,10 @@ class _SortSheet extends StatelessWidget {
         const SizedBox(height: 12),
         ...SortOrder.values.map((order) {
           final labels = {
-            SortOrder.urgency: ((Icons.priority_high), 'Most Urgent First'),
-            SortOrder.name: ((Icons.sort_by_alpha), 'Name (A–Z)'),
-            SortOrder.room: ((Icons.home), 'By Room'),
-            SortOrder.dateAdded: ((Icons.date_range), 'Date Added'),
+            SortOrder.urgency: ((Icons.priority_high), 'most_urgent_first'.tr),
+            SortOrder.name: ((Icons.sort_by_alpha), 'name'.tr),
+            SortOrder.room: ((Icons.home), 'by_room'.tr),
+            SortOrder.dateAdded: ((Icons.date_range), 'date_added'.tr),
           };
           final (icon, label) = labels[order]!;
           final isSelected = s.sortOrder.value == order;
@@ -516,16 +516,21 @@ class _WeekStartTile extends StatelessWidget {
         leading: Icon(Icons.calendar_month, color: t.textDark),
         title: Text('week_starts'.tr, style: TextStyle(fontWeight: FontWeight.w600, color: t.textDark, fontSize: 15)),
         subtitle: Text(
-          s.weekStartMonday.value ? 'Monday' : 'Sunday',
+          s.weekStartMonday.value ? 'mon'.tr : 'sun'.tr,
           style: TextStyle(color: t.textMuted, fontSize: 13),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _MiniToggle(label: 'Mon', selected: s.weekStartMonday.value, t: t, onTap: () => s.setWeekStartMonday(true)),
+            _MiniToggle(
+              label: 'mon'.tr,
+              selected: s.weekStartMonday.value,
+              t: t,
+              onTap: () => s.setWeekStartMonday(true),
+            ),
             const SizedBox(width: 6),
             _MiniToggle(
-              label: 'Sun',
+              label: 'sun'.tr,
               selected: !s.weekStartMonday.value,
               t: t,
               onTap: () => s.setWeekStartMonday(false),
@@ -580,7 +585,7 @@ class _WaterUnitTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children:
               WaterUnit.values.map((u) {
-                final labels = {WaterUnit.none: '—', WaterUnit.ml: 'ml', WaterUnit.oz: 'oz'};
+                final labels = {WaterUnit.none: '—', WaterUnit.ml: 'ml'.tr, WaterUnit.oz: 'oz'.tr};
 
                 return Padding(
                   padding: const EdgeInsets.only(left: 4),

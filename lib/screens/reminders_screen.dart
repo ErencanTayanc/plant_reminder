@@ -26,25 +26,15 @@ class RemindersScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: t.gradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(28)),
+                  gradient: LinearGradient(colors: t.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
                 ),
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 12,
-                  left: 20,
-                  right: 20,
-                  bottom: 24,
-                ),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 12, left: 20, right: 20, bottom: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Reminders',
+                    Text(
+                      'reminders'.tr,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -53,10 +43,8 @@ class RemindersScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${critical.length} urgent · ${upcoming.length} upcoming',
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.8),
-                          fontSize: 14),
+                      '${critical.length} urgent. · ${upcoming.length} upcoming'.tr,
+                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
                     ),
                   ],
                 ),
@@ -64,9 +52,7 @@ class RemindersScreen extends StatelessWidget {
             ),
 
             if (critical.isNotEmpty) ...[
-              SliverToBoxAdapter(
-                child: _SectionHeader('TODAY', t),
-              ),
+              SliverToBoxAdapter(child: _SectionHeader('today'.tr, t)),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
                 sliver: SliverList(
@@ -81,9 +67,7 @@ class RemindersScreen extends StatelessWidget {
               ),
             ],
 
-            SliverToBoxAdapter(
-              child: _SectionHeader('UPCOMING', t),
-            ),
+            SliverToBoxAdapter(child: _SectionHeader('upcoming'.tr, t)),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
               sliver: SliverList(
@@ -110,17 +94,12 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            color: t.textMuted,
-            letterSpacing: 1.2,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(20, 16, 20, 10),
+    child: Text(
+      title,
+      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: t.textMuted, letterSpacing: 1.2),
+    ),
+  );
 }
 
 class _ReminderCard extends StatelessWidget {
@@ -133,21 +112,14 @@ class _ReminderCard extends StatelessWidget {
     final style = UrgencyStyle.of(plant.urgency);
 
     return GestureDetector(
-      onTap: () => Get.toNamed('/plant/${plant.id}'),
+      onTap: () => Get.toNamed('/plant/${plant.id}'.tr),
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: t.surface,
           borderRadius: BorderRadius.circular(14),
           border: Border(left: BorderSide(color: style.bar, width: 4)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 1),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 1))],
         ),
         child: Row(
           children: [
@@ -157,35 +129,22 @@ class _ReminderCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(plant.name,
-                      style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          color: t.textDark)),
+                  Text(plant.name, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: t.textDark)),
                   const SizedBox(height: 2),
                   Text(
                     plant.urgency == WaterUrgency.critical
                         ? '🔔 Overdue · every ${plant.waterIntervalDays} days'
-                        : '🔔 ${plant.statusLabel} · every ${plant.waterIntervalDays} days',
-                    style:
-                        TextStyle(fontSize: 12, color: t.textMuted),
+                        : '🔔 ${plant.statusLabel} · every ${plant.waterIntervalDays} days'.tr,
+                    style: TextStyle(fontSize: 12, color: t.textMuted),
                   ),
                 ],
               ),
             ),
             if (plant.urgency == WaterUrgency.critical)
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: style.background,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text('Now',
-                    style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: style.text)),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(color: style.background, borderRadius: BorderRadius.circular(10)),
+                child: Text('now'.tr, style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: style.text)),
               ),
           ],
         ),
