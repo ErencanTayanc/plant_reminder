@@ -5,8 +5,12 @@ import 'controllers/settings_controller.dart';
 import 'screens/main_scaffold.dart';
 import 'screens/plant_detail_screen.dart';
 import 'screens/add_plant_screen.dart';
+import 'services/notification_service.dart';
+import 'translations/app_translations.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
   runApp(const PlantApp());
 }
 
@@ -18,6 +22,10 @@ class PlantApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Plant Watering',
       debugShowCheckedModeBanner: false,
+      translations: AppTranslations(),
+
+      locale: const Locale('tr'), // 👈 başlangıç dili
+      //fallbackLocale: const Locale('en'),
       initialRoute: '/',
       initialBinding: BindingsBuilder(() {
         Get.put(SettingsController());
@@ -25,25 +33,13 @@ class PlantApp extends StatelessWidget {
       }),
       getPages: [
         GetPage(name: '/', page: () => const MainScaffold()),
-        GetPage(
-          name: '/plant/:id',
-          page: () => const PlantDetailScreen(),
-          transition: Transition.rightToLeft,
-        ),
-        GetPage(
-          name: '/add',
-          page: () => const AddPlantScreen(),
-          transition: Transition.downToUp,
-        ),
+        GetPage(name: '/plant/:id', page: () => const PlantDetailScreen(), transition: Transition.rightToLeft),
+        GetPage(name: '/add', page: () => const AddPlantScreen(), transition: Transition.downToUp),
       ],
-      // Dynamically rebuild theme when settings change
       builder: (context, child) {
         return Obx(() {
           final t = SettingsController.to.theme;
-          return Theme(
-            data: t.materialTheme,
-            child: child!,
-          );
+          return Theme(data: t.materialTheme, child: child!);
         });
       },
     );

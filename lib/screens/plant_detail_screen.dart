@@ -94,42 +94,80 @@ class PlantDetailScreen extends StatelessWidget {
                         _InfoCell('Room', plant.room, t),
                         _InfoCell('Light', plant.light, t),
                         _InfoCell('Frequency', 'Every ${plant.waterIntervalDays} days', t),
-                        _InfoCell('Last Watered', '${plant.daysSinceWatered}d ago', t),
+                        _InfoCell('Last Watered', plant.lastWateredLabel, t),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 10),
 
+                    // Watering timeline card
                     _Card(t: t, child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Water Level',
-                                style: TextStyle(fontWeight: FontWeight.bold,
-                                    color: t.textDark, fontSize: 14)),
-                            Text('${(plant.waterProgress * 100).toInt()}%',
-                                style: TextStyle(fontWeight: FontWeight.bold,
-                                    color: style.text, fontSize: 14)),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
+                        Text('Watering Timeline',
+                            style: TextStyle(fontWeight: FontWeight.bold,
+                                color: t.textDark, fontSize: 14)),
+                        const SizedBox(height: 14),
+                        Row(children: [
+                          // Last watered block
+                          Expanded(child: _TimelineBlock(
+                            icon: Icons.water_drop_outlined,
+                            label: 'Last Watered',
+                            value: plant.lastWateredLabel,
+                            sub: _formatDate(plant.lastWatered),
+                            color: t.primaryLight,
+                            t: t,
+                          )),
+                          Container(width: 1, height: 48, color: t.border, margin: const EdgeInsets.symmetric(horizontal: 12)),
+                          // Next watering block
+                          Expanded(child: _TimelineBlock(
+                            icon: Icons.event_available_rounded,
+                            label: 'Next Watering',
+                            value: plant.nextWateringLabel,
+                            sub: _formatDate(plant.nextWateringDate),
+                            color: style.text,
+                            t: t,
+                          )),
+                        ]),
+                        const SizedBox(height: 12),
+                        // Progress bar
                         ClipRRect(
                           borderRadius: BorderRadius.circular(6),
                           child: LinearProgressIndicator(
                             value: plant.waterProgress,
                             backgroundColor: t.accent,
                             valueColor: AlwaysStoppedAnimation(style.bar),
-                            minHeight: 10,
+                            minHeight: 8,
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          plant.daysUntilWater <= 0
-                              ? 'Overdue by ${-plant.daysUntilWater} day(s)!'
-                              : '${plant.daysUntilWater} days until next watering',
-                          style: TextStyle(fontSize: 12, color: style.text),
-                        ),
+                        const SizedBox(height: 6),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                          Text('${(plant.waterProgress * 100).toInt()}% through cycle',
+                              style: TextStyle(fontSize: 11, color: t.textMuted)),
+                          Text(
+                            plant.daysUntilWater <= 0
+                                ? 'Overdue by ${-plant.daysUntilWater}d!'
+                                : '${plant.daysUntilWater} days left',
+                            style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: style.text),
+                          ),
+                        ]),
+                        // Water amount if set
+                        Builder(builder: (_) {
+                          final unit = SettingsController.to.waterUnitShort;
+                          final amountLabel = plant.waterAmountLabel(unit);
+                          if (unit == 'none' || plant.waterAmountMl == null) return const SizedBox.shrink();
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(children: [
+                              Icon(Icons.water_drop, size: 14, color: t.primaryLight),
+                              const SizedBox(width: 6),
+                              Text('Recommended amount: ',
+                                  style: TextStyle(fontSize: 12, color: t.textMuted)),
+                              Text(amountLabel,
+                                  style: TextStyle(fontSize: 12,
+                                      fontWeight: FontWeight.bold, color: t.primary)),
+                            ]),
+                          );
+                        }),
                       ],
                     )),
                     const SizedBox(height: 12),
@@ -148,25 +186,33 @@ class PlantDetailScreen extends StatelessWidget {
                               .entries
                               .map((e) {
                             final isToday = e.key == DateTime.now().weekday - 1;
+                            final isNextWater = e.key == plant.nextWateringDate.weekday - 1 &&
+                                plant.daysUntilWater >= 0 && plant.daysUntilWater <= 6;
                             return Column(children: [
                               Text(e.value,
                                   style: TextStyle(
                                       fontSize: 11,
                                       color: isToday ? t.primary : t.textMuted,
-                                      fontWeight: isToday
-                                          ? FontWeight.bold
-                                          : FontWeight.normal)),
+                                      fontWeight: isToday ? FontWeight.bold : FontWeight.normal)),
                               const SizedBox(height: 6),
                               Container(
                                 width: 10, height: 10,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: isToday ? t.primary : t.accent,
+                                  color: isNextWater
+                                      ? style.bar
+                                      : isToday ? t.primary : t.accent,
                                 ),
                               ),
                             ]);
                           }).toList(),
                         ),
+                        const SizedBox(height: 8),
+                        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                          _LegendDot(color: t.primary, label: 'Today'),
+                          const SizedBox(width: 16),
+                          _LegendDot(color: style.bar, label: 'Water day'),
+                        ]),
                       ],
                     )),
                     const SizedBox(height: 28),
@@ -391,4 +437,54 @@ class _SheetOption extends StatelessWidget {
                 style: TextStyle(fontSize: 15,
                     color: t.primary, fontWeight: FontWeight.w600)),
           ])));
+}
+
+// ── Timeline block widget ────────────────────────────────────────────────────
+
+class _TimelineBlock extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final String sub;
+  final Color color;
+  final dynamic t;
+  const _TimelineBlock({required this.icon, required this.label,
+      required this.value, required this.sub, required this.color, required this.t});
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(children: [
+        Icon(icon, size: 13, color: color),
+        const SizedBox(width: 4),
+        Text(label, style: TextStyle(fontSize: 11, color: t.textMuted)),
+      ]),
+      const SizedBox(height: 4),
+      Text(value, style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: color)),
+      Text(sub, style: TextStyle(fontSize: 11, color: t.textMuted)),
+    ],
+  );
+}
+
+// ── Legend dot ────────────────────────────────────────────────────────────────
+
+class _LegendDot extends StatelessWidget {
+  final Color color;
+  final String label;
+  const _LegendDot({required this.color, required this.label});
+  @override
+  Widget build(BuildContext context) => Row(mainAxisSize: MainAxisSize.min, children: [
+    Container(width: 8, height: 8,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
+    const SizedBox(width: 4),
+    Text(label, style: TextStyle(fontSize: 10, color: color)),
+  ]);
+}
+
+// ── Date formatter ───────────────────────────────────────────────────────────
+
+String _formatDate(DateTime d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return '${d.day} ${months[d.month - 1]} ${d.year}';
 }

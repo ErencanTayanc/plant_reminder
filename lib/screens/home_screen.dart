@@ -24,20 +24,10 @@ class HomeScreen extends StatelessWidget {
             SliverToBoxAdapter(
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: t.gradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(28)),
+                  gradient: LinearGradient(colors: t.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(28)),
                 ),
-                padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 12,
-                  left: 20,
-                  right: 20,
-                  bottom: 24,
-                ),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 12, left: 20, right: 20, bottom: 24),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -47,10 +37,7 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Text(
                             _greeting(s.userName.value),
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.85),
-                            ),
+                            style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.85)),
                           ),
                           const SizedBox(height: 2),
                           const Text(
@@ -73,11 +60,9 @@ class HomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.25),
                           borderRadius: BorderRadius.circular(21),
-                          border: Border.all(
-                              color: Colors.white.withOpacity(0.4)),
+                          border: Border.all(color: Colors.white.withOpacity(0.4)),
                         ),
-                        child: const Icon(Icons.add,
-                            color: Colors.white, size: 22),
+                        child: const Icon(Icons.add, color: Colors.white, size: 22),
                       ),
                     ),
                   ],
@@ -93,12 +78,7 @@ class HomeScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          t.accent,
-                          t.accent.withOpacity(0.5),
-                        ],
-                      ),
+                      gradient: LinearGradient(colors: [t.accent, t.accent.withOpacity(0.5)]),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(color: t.border),
                     ),
@@ -111,17 +91,9 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             Text(
                               '${critical.length} plant${critical.length > 1 ? 's need' : ' needs'} water!',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: t.textDark,
-                                fontSize: 14,
-                              ),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: t.textDark, fontSize: 14),
                             ),
-                            Text(
-                              "Don't let them dry out",
-                              style: TextStyle(
-                                  color: t.textMuted, fontSize: 12),
-                            ),
+                            Text("Don't let them dry out", style: TextStyle(color: t.textMuted, fontSize: 12)),
                           ],
                         ),
                       ],
@@ -137,41 +109,33 @@ class HomeScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: ['All', 'Urgent', 'Today', 'This Week']
-                        .asMap()
-                        .entries
-                        .map((e) => Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 14, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: e.key == 0
-                                      ? t.primary
-                                      : t.accent,
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: e.key == 0
-                                        ? t.primary
-                                        : t.border,
+                    children:
+                        ['All', 'Urgent', 'Today', 'This Week']
+                            .asMap()
+                            .entries
+                            .map(
+                              (e) => Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: e.key == 0 ? t.primary : t.accent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: e.key == 0 ? t.primary : t.border),
                                   ),
-                                ),
-                                child: Text(
-                                  e.value,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: e.key == 0
-                                        ? Colors.white
-                                        : t.primaryLight,
-                                    fontWeight: e.key == 0
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                  child: Text(
+                                    e.value,
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: e.key == 0 ? Colors.white : t.primaryLight,
+                                      fontWeight: e.key == 0 ? FontWeight.bold : FontWeight.normal,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ))
-                        .toList(),
+                            )
+                            .toList(),
                   ),
                 ),
               ),
@@ -184,9 +148,9 @@ class HomeScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate(
                   (context, index) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: PlantCard(plant: ctrl.plants[index]),
+                    child: PlantCard(plant: ctrl.sortedPlants[index]),
                   ),
-                  childCount: ctrl.plants.length,
+                  childCount: ctrl.sortedPlants.length,
                 ),
               ),
             ),

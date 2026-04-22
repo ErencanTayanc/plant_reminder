@@ -6,16 +6,12 @@ import 'home_screen.dart';
 import 'reminders_screen.dart';
 import 'stats_screen.dart';
 import 'settings_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MainScaffold extends StatelessWidget {
   const MainScaffold({super.key});
 
-  static const _screens = [
-    HomeScreen(),
-    RemindersScreen(),
-    StatsScreen(),
-    SettingsScreen(),
-  ];
+  static const _screens = [HomeScreen(), RemindersScreen(), StatsScreen(), SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -27,30 +23,35 @@ class MainScaffold extends StatelessWidget {
 
       return Scaffold(
         backgroundColor: t.bg,
-        body: IndexedStack(
-          index: ctrl.currentTab.value,
-          children: _screens,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // Add your action here
+          },
+          child: const FaIcon(FontAwesomeIcons.robot),
         ),
+        body: IndexedStack(index: ctrl.currentTab.value, children: _screens),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             color: t.surface,
             border: Border(top: BorderSide(color: t.border)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(t.isDark ? 0.4 : 0.06),
-                blurRadius: 20,
-                offset: const Offset(0, -4),
+                color: Colors.black.withOpacity(t.isDark ? 0.35 : 0.06),
+                blurRadius: 24,
+                offset: const Offset(0, -6),
               ),
             ],
           ),
           child: SafeArea(
-            child: SizedBox(
-              height: 62,
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _NavItem(
-                    icon: '🌿',
+                    icon: Icons.eco_outlined,
+                    activeIcon: Icons.eco,
                     label: 'Plants',
                     index: 0,
                     currentIndex: ctrl.currentTab.value,
@@ -58,7 +59,8 @@ class MainScaffold extends StatelessWidget {
                     t: t,
                   ),
                   _NavItem(
-                    icon: '🔔',
+                    icon: Icons.notifications_none_rounded,
+                    activeIcon: Icons.notifications_active_rounded,
                     label: 'Reminders',
                     index: 1,
                     currentIndex: ctrl.currentTab.value,
@@ -66,7 +68,8 @@ class MainScaffold extends StatelessWidget {
                     t: t,
                   ),
                   _NavItem(
-                    icon: '📊',
+                    icon: Icons.bar_chart_outlined,
+                    activeIcon: Icons.bar_chart,
                     label: 'Stats',
                     index: 2,
                     currentIndex: ctrl.currentTab.value,
@@ -74,7 +77,8 @@ class MainScaffold extends StatelessWidget {
                     t: t,
                   ),
                   _NavItem(
-                    icon: '⚙️',
+                    icon: Icons.settings_outlined,
+                    activeIcon: Icons.settings,
                     label: 'Settings',
                     index: 3,
                     currentIndex: ctrl.currentTab.value,
@@ -92,7 +96,8 @@ class MainScaffold extends StatelessWidget {
 }
 
 class _NavItem extends StatelessWidget {
-  final String icon;
+  final IconData icon;
+  final IconData activeIcon;
   final String label;
   final int index;
   final int currentIndex;
@@ -101,6 +106,7 @@ class _NavItem extends StatelessWidget {
 
   const _NavItem({
     required this.icon,
+    required this.activeIcon,
     required this.label,
     required this.index,
     required this.currentIndex,
@@ -112,28 +118,43 @@ class _NavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isActive = index == currentIndex;
 
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+        duration: const Duration(milliseconds: 220),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isActive ? t.accent : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          color: isActive ? t.accent.withOpacity(0.4) : Colors.transparent,
+          borderRadius: BorderRadius.circular(14),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(icon, style: const TextStyle(fontSize: 21)),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                isActive ? activeIcon : icon,
+                key: ValueKey(isActive),
+                size: 24,
                 color: isActive ? t.primary : t.textMuted,
               ),
+            ),
+
+            const SizedBox(height: 3),
+
+            Text(
+              label,
+              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: isActive ? t.primary : t.textMuted),
+            ),
+
+            const SizedBox(height: 4),
+
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 3,
+              width: isActive ? 16 : 0,
+              decoration: BoxDecoration(color: t.primary, borderRadius: BorderRadius.circular(2)),
             ),
           ],
         ),
