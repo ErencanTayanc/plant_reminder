@@ -59,7 +59,7 @@ const Map<String, String> tr = {
   'reminders': 'Hatırlatmalar',
   'appearance': 'Görünüm',
   'about': 'Hakkında',
-  'your_name': 'Adın',
+  'your_name': 'Isim',
   'tap_set_name': 'Adını ayarlamak için dokun',
   'haptics': 'Titreşim',
   'haptics_desc': 'Bitki sularken titreşim',
@@ -94,9 +94,15 @@ const Map<String, String> tr = {
   "now": "Şimdi",
   "days": "Günler",
   "none": "Yok",
-  "tue": "Salı",
-  "wed": "Çarşamba",
-  "thu": "Perşembe",
+  "tue": "Sal",
+  "wed": "Çar",
+  "thu": "Per",
   "fri": "Cuma",
-  "sat": "Cumartesi",
+  "sat": "Cmts",
+
+    // ── Navigation Bar ───────────────────────────────────────
+ 'nav_plants':'Bitkiler',
+ 'nav_reminders':'Hatırlatıcı',
+ 'nav_stats':'İstatistikler',
+ 'nav_settings':'Ayarlar',
 };

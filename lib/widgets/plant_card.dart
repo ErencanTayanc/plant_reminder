@@ -29,7 +29,7 @@ class PlantCard extends StatelessWidget {
                 actions: [
                   TextButton(
                     onPressed: () => Get.back(result: false),
-                    child: Text('Cancel', style: TextStyle(color: t.textMuted)),
+                    child: Text('cancel'.tr, style: TextStyle(color: t.textMuted)),
                   ),
                   ElevatedButton(
                     onPressed: () => Get.back(result: true),
@@ -38,7 +38,7 @@ class PlantCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       elevation: 0,
                     ),
-                    child: const Text('Delete', style: TextStyle(color: Colors.white)),
+                    child: Text('delete'.tr, style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
@@ -125,7 +125,7 @@ class PlantCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
-                              isWatered ? '✓ Watered!' : plant.statusLabel,
+                              isWatered ? 'watered'.tr : plant.statusLabel,
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,

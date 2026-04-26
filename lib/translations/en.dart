@@ -98,4 +98,17 @@ const Map<String, String> en = {
   "thu": "Thu",
   "fri": "Fri",
   "sat": "Sat",
+
+    // ── Settings ──────────────────────────────────────────
+  'settings': 'Settings',
+ 
+  // ── Navigation Bar ───────────────────────────────────────
+ 'nav_plants':'Plants',
+ 'nav_reminders':'Reminders',
+ 'nav_stats':'Stats',
+ 'nav_settings':'Settings',
+
+ // 
+ //This will permanently delete this plant.
+ 
 };

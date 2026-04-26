@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../controllers/plant_controller.dart';
 import '../controllers/settings_controller.dart';
@@ -11,7 +13,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class MainScaffold extends StatelessWidget {
   const MainScaffold({super.key});
 
-  static const _screens = [HomeScreen(), RemindersScreen(), StatsScreen(), SettingsScreen()];
+  static const _screens = [
+    HomeScreen(),
+    RemindersScreen(),
+    StatsScreen(),
+    SettingsScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +31,19 @@ class MainScaffold extends StatelessWidget {
       return Scaffold(
         backgroundColor: t.bg,
         floatingActionButton: FloatingActionButton(
+          mini: true,
           onPressed: () {
             // Add your action here
           },
-          child: const FaIcon(FontAwesomeIcons.robot),
+          child: SvgPicture.asset(
+            'assets/svg/gemini.svg',
+            height: 24,
+            width: 24,
+            colorFilter: ColorFilter.mode(
+              t.bg,
+              BlendMode.srcIn,
+            ), // Change color
+          ),
         ),
         body: IndexedStack(index: ctrl.currentTab.value, children: _screens),
         bottomNavigationBar: Container(
@@ -52,7 +68,7 @@ class MainScaffold extends StatelessWidget {
                   _NavItem(
                     icon: Icons.eco_outlined,
                     activeIcon: Icons.eco,
-                    label: 'Plants',
+                    label: 'nav_plants'.tr,
                     index: 0,
                     currentIndex: ctrl.currentTab.value,
                     onTap: () => ctrl.changeTab(0),
@@ -61,7 +77,7 @@ class MainScaffold extends StatelessWidget {
                   _NavItem(
                     icon: Icons.notifications_none_rounded,
                     activeIcon: Icons.notifications_active_rounded,
-                    label: 'Reminders',
+                    label: 'nav_reminders'.tr,
                     index: 1,
                     currentIndex: ctrl.currentTab.value,
                     onTap: () => ctrl.changeTab(1),
@@ -70,7 +86,7 @@ class MainScaffold extends StatelessWidget {
                   _NavItem(
                     icon: Icons.bar_chart_outlined,
                     activeIcon: Icons.bar_chart,
-                    label: 'Stats',
+                    label: 'nav_stats'.tr,
                     index: 2,
                     currentIndex: ctrl.currentTab.value,
                     onTap: () => ctrl.changeTab(2),
@@ -79,7 +95,7 @@ class MainScaffold extends StatelessWidget {
                   _NavItem(
                     icon: Icons.settings_outlined,
                     activeIcon: Icons.settings,
-                    label: 'Settings',
+                    label: 'nav_settings'.tr,
                     index: 3,
                     currentIndex: ctrl.currentTab.value,
                     onTap: () => ctrl.changeTab(3),
@@ -145,7 +161,11 @@ class _NavItem extends StatelessWidget {
 
             Text(
               label,
-              style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: isActive ? t.primary : t.textMuted),
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                color: isActive ? t.primary : t.textMuted,
+              ),
             ),
 
             const SizedBox(height: 4),
@@ -154,7 +174,10 @@ class _NavItem extends StatelessWidget {
               duration: const Duration(milliseconds: 200),
               height: 3,
               width: isActive ? 16 : 0,
-              decoration: BoxDecoration(color: t.primary, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(
+                color: t.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ],
         ),
