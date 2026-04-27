@@ -6,13 +6,13 @@ import '../models/plant_model.dart';
 class PlantThemeData {
   final String name;
   final String emoji;
-  final List<Color> gradient;      // header gradient
+  final List<Color> gradient; // header gradient
   final Color primary;
   final Color primaryLight;
   final Color bg;
   final Color surface;
   final Color border;
-  final Color accent;              // soft tint bg (like bgGreen)
+  final Color accent; // soft tint bg (like bgGreen)
   final Color textDark;
   final Color textMuted;
   final bool isDark;
@@ -33,34 +33,34 @@ class PlantThemeData {
   });
 
   ThemeData get materialTheme => ThemeData(
+    fontFamily: 'Georgia',
+    scaffoldBackgroundColor: bg,
+    brightness: isDark ? Brightness.dark : Brightness.light,
+    colorScheme: ColorScheme(
+      brightness: isDark ? Brightness.dark : Brightness.light,
+      primary: primary,
+      onPrimary: Colors.white,
+      secondary: primaryLight,
+      onSecondary: Colors.white,
+      error: Colors.redAccent,
+      onError: Colors.white,
+      surface: surface,
+      onSurface: textDark,
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      foregroundColor: isDark ? Colors.white : textDark,
+      titleTextStyle: TextStyle(
+        color: isDark ? Colors.white : textDark,
+        fontSize: 26,
+        fontWeight: FontWeight.bold,
         fontFamily: 'Georgia',
-        scaffoldBackgroundColor: bg,
-        brightness: isDark ? Brightness.dark : Brightness.light,
-        colorScheme: ColorScheme(
-          brightness: isDark ? Brightness.dark : Brightness.light,
-          primary: primary,
-          onPrimary: Colors.white,
-          secondary: primaryLight,
-          onSecondary: Colors.white,
-          error: Colors.redAccent,
-          onError: Colors.white,
-          surface: surface,
-          onSurface: textDark,
-        ),
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          foregroundColor: isDark ? Colors.white : textDark,
-          titleTextStyle: TextStyle(
-            color: isDark ? Colors.white : textDark,
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Georgia',
-            letterSpacing: -0.5,
-          ),
-        ),
-        dialogBackgroundColor: surface,
-      );
+        letterSpacing: -0.5,
+      ),
+    ),
+    dialogBackgroundColor: surface,
+  );
 }
 
 // ── 8 built-in themes ─────────────────────────────────────────────────────────
@@ -190,38 +190,18 @@ class UrgencyStyle {
   final Color bar;
   final Color text;
 
-  const UrgencyStyle({
-    required this.background,
-    required this.bar,
-    required this.text,
-  });
+  const UrgencyStyle({required this.background, required this.bar, required this.text});
 
   static UrgencyStyle of(WaterUrgency urgency) {
     switch (urgency) {
       case WaterUrgency.critical:
-        return const UrgencyStyle(
-          background: Color(0xFFFFE5E5),
-          bar: Color(0xFFE63946),
-          text: Color(0xFFC1121F),
-        );
+        return const UrgencyStyle(background: Color(0xFFFFE5E5), bar: Color(0xFFE63946), text: Color(0xFFC1121F));
       case WaterUrgency.soon:
-        return const UrgencyStyle(
-          background: Color(0xFFFFF4E0),
-          bar: Color(0xFFF4A261),
-          text: Color(0xFFE07B1A),
-        );
+        return const UrgencyStyle(background: Color(0xFFFFF4E0), bar: Color(0xFFF4A261), text: Color(0xFFE07B1A));
       case WaterUrgency.upcoming:
-        return const UrgencyStyle(
-          background: Color(0xFFE8F5E9),
-          bar: Color(0xFF52B788),
-          text: Color(0xFF2D6A4F),
-        );
+        return const UrgencyStyle(background: Color(0xFFE8F5E9), bar: Color(0xFF52B788), text: Color(0xFF2D6A4F));
       case WaterUrgency.ok:
-        return const UrgencyStyle(
-          background: Color(0xFFF0F7F2),
-          bar: Color(0xFF95D5B2),
-          text: Color(0xFF40916C),
-        );
+        return const UrgencyStyle(background: Color(0xFFF0F7F2), bar: Color(0xFF95D5B2), text: Color(0xFF40916C));
     }
   }
 }

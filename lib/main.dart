@@ -24,7 +24,7 @@ class PlantApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(),
 
-      locale: const Locale('tr'), // 👈 başlangıç dili
+      locale: const Locale('en'), //  Initial Language
       //fallbackLocale: const Locale('en'),
       initialRoute: '/',
       initialBinding: BindingsBuilder(() {

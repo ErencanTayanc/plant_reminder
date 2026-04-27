@@ -99,16 +99,35 @@ const Map<String, String> en = {
   "fri": "Fri",
   "sat": "Sat",
 
-    // ── Settings ──────────────────────────────────────────
+  // ── Settings ──────────────────────────────────────────
   'settings': 'Settings',
- 
-  // ── Navigation Bar ───────────────────────────────────────
- 'nav_plants':'Plants',
- 'nav_reminders':'Reminders',
- 'nav_stats':'Stats',
- 'nav_settings':'Settings',
 
- // 
- //This will permanently delete this plant.
- 
+  // ── Navigation Bar ───────────────────────────────────────
+  'nav_plants': 'Plants',
+  'nav_reminders': 'Reminders',
+  'nav_stats': 'Stats',
+  'nav_settings': 'Settings',
+
+  // ── Stats Screen ───────────────────────────────────────
+  'garden_stats': 'Garden Stats',
+  'garden_stats_subtitle': 'Your plant care overview',
+  'total_plants': 'Total Plants',
+  'times_watered': 'Times Watered',
+  'need_water_today': 'Need Water Today',
+  'all_plants_are_good_today': 'All plants are good today! 🎉',
+  'tomorrow': 'Tomorrow',
+  'nothing_due_tomorrow': 'Nothing due tomorrow',
+  'full_schedule': 'Full Schedule',
+
+  // ── Plant Model ───────────────────────────────────────
+  'water_now_model': 'Water Now!',
+  'just_now': 'Just now',
+  'yesterday': 'Yesterday',
+  /*'': '',
+  '': '',
+  '': '',
+  '': '',
+  '': '',
+  '': '',
+  '': '',*/
 };

@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+
 class Plant {
   final int id;
   String name;
@@ -81,18 +83,18 @@ class Plant {
 
   /// Short label for card badge
   String get statusLabel {
-    if (daysUntilWater <= 0) return 'Water Now!';
-    if (daysUntilWater == 1) return 'Tomorrow';
+    if (daysUntilWater <= 0) return 'water_now_model'.tr;
+    if (daysUntilWater == 1) return 'tomorrow'.tr;
     return 'In $daysUntilWater days';
   }
 
   /// Human-readable "last watered" string
   String get lastWateredLabel {
     final hours = hoursSinceWatered;
-    if (hours < 1) return 'Just now';
+    if (hours < 1) return 'just_now'.tr;
     if (hours < 24) return '${hours}h ago';
     final days = daysSinceWatered;
-    if (days == 1) return 'Yesterday';
+    if (days == 1) return 'yesterday'.tr;
     return '$days days ago';
   }
 

@@ -63,7 +63,7 @@ const Map<String, String> tr = {
   'tap_set_name': 'Adını ayarlamak için dokun',
   'haptics': 'Titreşim',
   'haptics_desc': 'Bitki sularken titreşim',
-  'sort_plants': 'Sıralama',
+  'sort_plants': 'Bitki Sıralama',
   'week_starts': 'Hafta Başlangıcı',
   'water_unit': 'Su Miktarı Birimi',
   'language': 'Dil',
@@ -100,9 +100,20 @@ const Map<String, String> tr = {
   "fri": "Cuma",
   "sat": "Cmts",
 
-    // ── Navigation Bar ───────────────────────────────────────
- 'nav_plants':'Bitkiler',
- 'nav_reminders':'Hatırlatıcı',
- 'nav_stats':'İstatistikler',
- 'nav_settings':'Ayarlar',
+  // ── Navigation Bar ───────────────────────────────────────
+  'nav_plants': 'Bitkiler',
+  'nav_reminders': 'Hatırlatıcı',
+  'nav_stats': 'İstatistikler',
+  'nav_settings': 'Ayarlar',
+
+  // ── Stats Screen  ───────────────────────────────────────
+  'garden_stats': 'Bahçe İstatistikleri',
+  'garden_stats_subtitle': 'Bitki Bakımı Özeti',
+  'total_plants': 'Toplam Bitkiler',
+  'times_watered': 'Su Verildiği Zamanlar',
+  'need_water_today': 'Bugün Sulanması Gereklidir',
+  'all_plants_are_good_today': 'Tüm bitkiler iyi durumda! 🎉',
+  'tomorrow': 'Yarın',
+  'nothing_due_tomorrow': 'Yarın için hiçbir şey yok',
+  'full_schedule': 'Tüm Takvim ',
 };

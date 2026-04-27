@@ -33,8 +33,8 @@ class StatsScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Garden Stats',
+                    Text(
+                      'garden_stats'.tr,
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -43,7 +43,7 @@ class StatsScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Your plant care overview',
+                      'garden_stats_subtitle'.tr,
                       style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14),
                     ),
                   ],
@@ -64,7 +64,7 @@ class StatsScreen extends StatelessWidget {
                           icon: Icon(Icons.eco, color: Colors.green, size: 36),
                           //emoji: '🌿',
                           value: '${ctrl.plants.length}',
-                          label: 'Total Plants',
+                          label: 'total_plants'.tr,
                           color: t.primary,
                         ),
                       ),
@@ -74,7 +74,7 @@ class StatsScreen extends StatelessWidget {
                           t: t,
                           icon: Icon(Icons.water_drop, color: Colors.blue, size: 36),
                           value: '${ctrl.totalWaterings.value}',
-                          label: 'Times Watered',
+                          label: 'times_watered'.tr,
                           color: const Color(0xFF0096C7),
                         ),
                       ),
@@ -83,9 +83,9 @@ class StatsScreen extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   // ── Need water today ──────────────────────────────────────
-                  _SectionTitle('Need Water Today', Icon(Icons.water_drop, color: Colors.blue), t),
+                  _SectionTitle('need_water_today'.tr, Icon(Icons.water_drop, color: Colors.blue), t),
                   if (needWater.isEmpty)
-                    _EmptyState(t: t, message: 'All plants are good today! 🎉')
+                    _EmptyState(t: t, message: 'all_plants_are_good_today'.tr)
                   else
                     ...needWater.map(
                       (plant) => Padding(
@@ -96,9 +96,9 @@ class StatsScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // ── Needs water tomorrow ──────────────────────────────────
-                  _SectionTitle('Tomorrow', Icon(Icons.park), t),
+                  _SectionTitle('tomorrow'.tr, Icon(Icons.park), t),
                   if (upcoming.isEmpty)
-                    _EmptyState(t: t, message: 'Nothing due tomorrow')
+                    _EmptyState(t: t, message: 'nothing_due_tomorrow'.tr)
                   else
                     ...upcoming.map(
                       (plant) => Padding(
@@ -109,7 +109,7 @@ class StatsScreen extends StatelessWidget {
                   const SizedBox(height: 20),
 
                   // ── All plants watering schedule ──────────────────────────
-                  _SectionTitle('Full Schedule', Icon(Icons.schedule), t),
+                  _SectionTitle('full_schedule'.tr, Icon(Icons.schedule), t),
                   ...(() {
                     final sorted = List<Plant>.from(ctrl.plants)
                       ..sort((a, b) => a.daysUntilWater.compareTo(b.daysUntilWater));

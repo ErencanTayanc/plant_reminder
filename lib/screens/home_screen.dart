@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:plant_reminder/services/gemini_service.dart';
 import '../controllers/plant_controller.dart';
 import '../controllers/settings_controller.dart';
 import '../widgets/plant_card.dart';
@@ -18,6 +24,16 @@ class HomeScreen extends StatelessWidget {
 
       return Scaffold(
         backgroundColor: t.bg,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: t.primary,
+          onPressed: () => _showPhotoSourceSheet(t),
+          child: SvgPicture.asset(
+            'assets/svg/gemini.svg',
+            height: 24,
+            width: 24,
+            colorFilter: ColorFilter.mode(t.bg, BlendMode.srcIn),
+          ),
+        ),
         body: CustomScrollView(
           slivers: [
             // ── Gradient header ───────────────────────────────────────────
@@ -167,4 +183,274 @@ class HomeScreen extends StatelessWidget {
     if (hour < 17) return 'Good afternoon$suffix ☀️';
     return 'Good evening$suffix 🌙';
   }
+
+  // ── Step 1: Pick photo source ─────────────────────────────────────────────
+
+  void _showPhotoSourceSheet(dynamic t) {
+    final picker = ImagePicker();
+
+    Get.bottomSheet(
+      Container(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+        decoration: BoxDecoration(color: t.bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(color: t.border, borderRadius: BorderRadius.circular(2)),
+            ),
+
+            // Title
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(color: t.accent, borderRadius: BorderRadius.circular(12)),
+                  child: Icon(Icons.local_florist, color: t.primary, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Analyze Plant Health',
+                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: t.textDark),
+                    ),
+                    Text('Powered by Gemini AI', style: TextStyle(fontSize: 12, color: t.textMuted)),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Camera option
+            _SheetOption(
+              icon: Icons.camera_alt_rounded,
+              label: 'Take a Photo',
+              t: t,
+              onTap: () async {
+                Get.back();
+                final img = await picker.pickImage(
+                  source: ImageSource.camera,
+                  maxWidth: 1024,
+                  maxHeight: 1024,
+                  imageQuality: 85,
+                );
+                if (img != null) _analyzeAndShow(File(img.path), t);
+              },
+            ),
+            const SizedBox(height: 10),
+
+            // Gallery option
+            _SheetOption(
+              icon: Icons.photo_library_rounded,
+              label: 'Choose from Gallery',
+              t: t,
+              onTap: () async {
+                Get.back();
+                final img = await picker.pickImage(
+                  source: ImageSource.gallery,
+                  maxWidth: 1024,
+                  maxHeight: 1024,
+                  imageQuality: 85,
+                );
+                if (img != null) _analyzeAndShow(File(img.path), t);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Step 2: Show loading → call Gemini → show result ─────────────────────
+
+  Future<void> _analyzeAndShow(File image, dynamic t) async {
+    // Show loading sheet immediately
+    Get.bottomSheet(_LoadingSheet(t: t), isDismissible: false, enableDrag: false);
+
+    try {
+      final result = await GeminiService.analyzePlant(image);
+      Get.back(); // close loading
+      _showResultSheet(image, result, t);
+    } catch (e) {
+      Get.back(); // close loading
+      Get.snackbar(
+        '⚠️ Analysis Failed',
+        e.toString().replaceFirst('Exception: ', ''),
+        backgroundColor: const Color(0xFFFFE5E5),
+        colorText: const Color(0xFFC1121F),
+        snackPosition: SnackPosition.BOTTOM,
+        duration: const Duration(seconds: 4),
+      );
+    }
+  }
+
+  // ── Step 3: Result bottom sheet ───────────────────────────────────────────
+
+  void _showResultSheet(File image, String result, dynamic t) {
+    Get.bottomSheet(_ResultSheet(image: image, result: result, t: t), isScrollControlled: true);
+  }
+}
+
+// ── Loading sheet ─────────────────────────────────────────────────────────────
+
+class _LoadingSheet extends StatelessWidget {
+  final dynamic t;
+  const _LoadingSheet({required this.t});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+    decoration: BoxDecoration(color: t.bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 40,
+          height: 4,
+          margin: const EdgeInsets.only(bottom: 24),
+          decoration: BoxDecoration(color: t.border, borderRadius: BorderRadius.circular(2)),
+        ),
+        CircularProgressIndicator(color: t.primary, strokeWidth: 2.5),
+        const SizedBox(height: 20),
+        Text('Analyzing your plant…', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: t.textDark)),
+        const SizedBox(height: 6),
+        Text('Gemini is checking health status', style: TextStyle(fontSize: 13, color: t.textMuted)),
+        const SizedBox(height: 8),
+      ],
+    ),
+  );
+}
+
+// ── Result sheet ──────────────────────────────────────────────────────────────
+
+class _ResultSheet extends StatelessWidget {
+  final File image;
+  final String result;
+  final dynamic t;
+  const _ResultSheet({required this.image, required this.result, required this.t});
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.75,
+      minChildSize: 0.5,
+      maxChildSize: 0.95,
+      builder:
+          (_, controller) => Container(
+            decoration: BoxDecoration(color: t.bg, borderRadius: const BorderRadius.vertical(top: Radius.circular(24))),
+            child: ListView(
+              controller: controller,
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+              children: [
+                // Handle bar
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(color: t.border, borderRadius: BorderRadius.circular(2)),
+                  ),
+                ),
+
+                // Header
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(color: t.accent, borderRadius: BorderRadius.circular(12)),
+                      child: Icon(Icons.local_florist, color: t.primary, size: 20),
+                    ),
+                    const SizedBox(width: 12),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Plant Health Report',
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: t.textDark),
+                        ),
+                        Text('Powered by Gemini AI', style: TextStyle(fontSize: 12, color: t.textMuted)),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Photo thumbnail
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.file(image, height: 180, width: double.infinity, fit: BoxFit.contain),
+                ),
+                const SizedBox(height: 16),
+
+                // Result card
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: t.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(color: t.border),
+                  ),
+                  child: MarkdownBody(data: result), // style: TextStyle(fontSize: 14, color: t.textDark, height: 1.6)),
+                ),
+                const SizedBox(height: 16),
+
+                // Close button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => Get.back(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: t.primary,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Done',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+    );
+  }
+}
+
+// ── Sheet option ──────────────────────────────────────────────────────────────
+
+class _SheetOption extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final dynamic t;
+  final VoidCallback onTap;
+  const _SheetOption({required this.icon, required this.label, required this.t, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) => GestureDetector(
+    onTap: onTap,
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      decoration: BoxDecoration(
+        color: t.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: t.border),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: t.primary, size: 22),
+          const SizedBox(width: 12),
+          Text(label, style: TextStyle(fontSize: 15, color: t.primary, fontWeight: FontWeight.w600)),
+        ],
+      ),
+    ),
+  );
 }
